@@ -15,8 +15,7 @@ use std::fs::{self};
 use std::net::SocketAddr;
 use std::sync::Arc;
 use tower_http::{compression::CompressionLayer, trace::TraceLayer};
-use tracing::Level;
-use tracing_subscriber::{filter, layer::SubscriberExt, util::SubscriberInitExt};
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 struct AppState {
     data_dir: String,
@@ -31,12 +30,7 @@ struct Args {
     #[arg(short, long, default_value_t = 3000)]
     port: u16,
 
-    /// Path to the data directory
-    /// default is ./data
-    /// the data directory should contain .json files
-    /// that will be served by the server
-    /// the file name will be the endpoint
-    /// e.g. data/users.json will be served at /api/users
+    /// Path to the folder
     #[arg(short, long, default_value_t = format!("./data"))]
     data_dir: String,
 }
@@ -52,7 +46,7 @@ async fn main() {
     let exists: bool = fs::try_exists(&data_dir).expect("Can't check existence of data_dir");
 
     if !exists {
-        println!("data_dir does not exist: {data_dir}");
+        tracing::error!("data_dir does not exist: {data_dir}");
         std::process::exit(1);
     }
 
@@ -60,9 +54,9 @@ async fn main() {
     let files = get_json_files(data_dir.clone()).expect("Can't get json files");
 
     if !files.is_empty() {
-        println!("data_dir contains json files: {files:?}");
+        tracing::debug!("data_dir contains json files: {files:?}");
     } else {
-        println!("data_dir does not contain any json files");
+        tracing::warn!("data_dir does not contain any json files");
         std::process::exit(1);
     }
 
@@ -75,20 +69,12 @@ async fn main() {
 
     let shared_state = Arc::new(AppState { data_dir, files });
 
-    // tracing filter
-    let filter = filter::Targets::new()
-        .with_target("tower_http::trace::on_response", Level::INFO)
-        .with_target("tower_http::trace::on_request", Level::INFO)
-        .with_target("tower_http::trace::make_span", Level::INFO);
-
-    // initialize tracing
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "json-server-rs=info".into()),
+                .unwrap_or_else(|_| "json-server-rs=debug,tower_http=debug".into()),
         )
         .with(tracing_subscriber::fmt::layer())
-        .with(filter)
         .init();
 
     // build our application with a route
@@ -107,7 +93,7 @@ async fn main() {
 
     // run it
     let addr = SocketAddr::from(([127, 0, 0, 1], args.port));
-    println!("listening on http://{addr}");
+    println!("listening on http://{}", addr);
     tracing::debug!("listening on http://{}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())

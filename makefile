@@ -1,3 +1,5 @@
+NAME=json-server-rs
+
 clear:
 	clear
 
@@ -13,5 +15,10 @@ fmt: clear
 lint: clear
 	cargo clippy --fix
 
-perf: clear
-	cargo flamegraph 
+release: clear
+	cargo build --release
+
+run: clear
+	./target/release/$(NAME)
+
+start: clear release run

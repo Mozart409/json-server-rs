@@ -1,6 +1,6 @@
 #![forbid(unsafe_code)]
 #![warn(clippy::pedantic, clippy::cargo)]
-#![allow(clippy::unused_async)]
+#![allow(clippy::unused_async, clippy::unnecessary_wraps)]
 
 use axum::extract::State;
 use axum::Error;

@@ -9,7 +9,9 @@
 
 ## About <a name = "about"></a>
 
-JSON Server RS is a simple REST API for testing and prototyping or CI/CD pipelines. Shove your JSON data into a file and move it to the /data folder. The name of the file, e.g. "articles.json", will be the name of the endpoint, e.g. "http://localhost:3000/api/articles". The data will be served as a JSON array. To view all "endpoints" visit "http://localhost:3000/api" or "http://localhost:3000/api/".
+JSON Server RS is a user-friendly REST API designed to facilitate testing, prototyping, and continuous integration/continuous deployment (CI/CD) pipelines. The server allows users to easily store JSON data in a file and transfer it to the designated "/data" folder. By naming the file, for example, "articles.json", the corresponding endpoint will also be named "http://localhost:3000/api/articles". The data is then served as a JSON array.
+
+To view all available endpoints, users can navigate to "http://localhost:3000/api" or "http://localhost:3000/api/" in their web browser. This straightforward approach enables users to efficiently manage and manipulate their data, making it a valuable tool in various development and testing scenarios.
 
 ## Installing <a name = "installing"></a>
 

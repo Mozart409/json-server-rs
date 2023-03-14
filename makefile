@@ -13,7 +13,7 @@ fmt: clear
 	cargo fmt
 
 lint: clear
-	cargo clippy --fix
+	cargo clippy --fix --allow-staged
 
 release: clear
 	cargo build --release

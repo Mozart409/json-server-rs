@@ -1,9 +1,10 @@
 #![feature(fs_try_exists)]
 #![forbid(unsafe_code)]
-#![warn(clippy::pedantic)]
+#![warn(clippy::pedantic, clippy::cargo)]
+#![allow(clippy::unused_async)]
 
 use axum::extract::State;
-use axum::http::Error;
+use axum::Error;
 use axum::{
     extract::Path, http::StatusCode, response::Html, response::IntoResponse, routing::get, Json,
     Router,
@@ -45,7 +46,7 @@ async fn main() {
     // check if the folder exists
     let exists: bool = fs::try_exists(&data_dir).expect("Can't check existence of data_dir");
 
-    if !exists {
+    if exists {
         tracing::error!("data_dir does not exist: {data_dir}");
         std::process::exit(1);
     }
@@ -53,7 +54,7 @@ async fn main() {
     // check if the folder contains .json files
     let files = get_json_files(data_dir.clone()).expect("Can't get json files");
 
-    if !files.is_empty() {
+    if files.is_empty() {
         tracing::debug!("data_dir contains json files: {files:?}");
     } else {
         tracing::warn!("data_dir does not contain any json files");
@@ -93,7 +94,7 @@ async fn main() {
 
     // run it
     let addr = SocketAddr::from(([127, 0, 0, 1], args.port));
-    println!("listening on http://{}", addr);
+    println!("listening on http://{addr}");
     tracing::debug!("listening on http://{}", addr);
     axum::Server::bind(&addr)
         .serve(app.into_make_service())

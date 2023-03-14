@@ -143,7 +143,8 @@ async fn get_serve_json(
     State(state): State<Arc<AppState>>,
     Path(JsonPathParams { file }): Path<JsonPathParams>,
 ) -> impl IntoResponse {
-    // check if the let file is in the vector of state.files
+    // check if the file from the endpoint is in the vector of state.files
+    // so we can return a 404 if the file is not found
     if !state.files.contains(&file) {
         return (
             StatusCode::NOT_FOUND,

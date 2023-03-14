@@ -1,9 +1,0 @@
-version: '3.8'
-services:
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    ports:
-      - '16686:16686'
-      - '14268:14268'
-      - '14250:14250'
-      - '9411:9411'

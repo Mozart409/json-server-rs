@@ -1,7 +1,7 @@
 clear:
 	clear
 
-dev: fmt lint clear
+dev: fmt clear
 	cargo watch -x run
 
 up: clear
@@ -11,4 +11,4 @@ fmt: clear
 	cargo fmt
 
 lint: clear
-	cargo clippy --fix --allow-dirty
+	cargo clippy --fix

@@ -33,8 +33,6 @@ sudo dnf install json-server-rs
 sudo apt-get install json-server-rs
 ```
 
-End with an example of getting some data out of the system or using it for a little demo.
-
 ## Usage <a name = "usage"></a>
 
 Add notes about how to use the system.

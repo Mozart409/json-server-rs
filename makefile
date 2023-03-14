@@ -11,7 +11,7 @@ fmt: clear
 	cargo fmt
 
 lint: clear
-	cargo clippy --fix -Dclippy::perf
+	cargo clippy --fix
 
 perf: clear
 	cargo flamegraph 

@@ -1,6 +1,7 @@
 #![feature(fs_try_exists)]
 #![forbid(unsafe_code)]
 #![warn(clippy::pedantic)]
+#![warn(clippy::perf)]
 
 use axum::extract::State;
 use axum::http::Error;

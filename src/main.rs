@@ -1,5 +1,5 @@
 use axum::{
-    extract::{Path, State},
+    extract::Path,
     http::StatusCode,
     response::Html,
     response::IntoResponse,
@@ -8,21 +8,27 @@ use axum::{
 };
 use serde::{Deserialize, Serialize};
 use std::{fs, net::SocketAddr};
-use tower::ServiceBuilder;
-
-use tower_http::compression::CompressionLayer;
-use tower_http::trace::TraceLayer;
-use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use tower_http::{compression::CompressionLayer, trace::TraceLayer};
+use tracing::Level;
+use tracing_subscriber::{filter, layer::SubscriberExt, util::SubscriberInitExt};
 
 #[tokio::main]
 async fn main() {
+    // tracing filter
+
+    let filter = filter::Targets::new()
+        .with_target("tower_http::trace::on_response", Level::DEBUG)
+        .with_target("tower_http::trace::on_request", Level::DEBUG)
+        .with_target("tower_http::trace::make_span", Level::DEBUG);
+
     // initialize tracing
     tracing_subscriber::registry()
         .with(
             tracing_subscriber::EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| "json-server-rs=debug".into()),
+                .unwrap_or_else(|_| "json-server-rs=info".into()),
         )
         .with(tracing_subscriber::fmt::layer())
+        .with(filter)
         .init();
 
     // build our application with a route
@@ -35,11 +41,8 @@ async fn main() {
         .route("/api", get(get_apis))
         .route("/api/", get(get_apis))
         .route("/api/:file", get(get_serve_json))
-        .layer(
-            ServiceBuilder::new()
-                .layer(TraceLayer::new_for_http())
-                .layer(CompressionLayer::new()),
-        );
+        .layer(TraceLayer::new_for_http())
+        .layer(CompressionLayer::new());
 
     // add a fallback service for handling routes to unknown paths
     let app = app.fallback(handler_404);

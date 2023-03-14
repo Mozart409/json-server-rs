@@ -1,4 +1,3 @@
-#![feature(fs_try_exists)]
 #![forbid(unsafe_code)]
 #![warn(clippy::pedantic, clippy::cargo)]
 #![allow(clippy::unused_async)]
@@ -14,8 +13,10 @@ use serde::Deserialize;
 use serde_json::{json, Value};
 use std::fs::{self};
 use std::net::SocketAddr;
+use std::path::Path as fsPath;
 use std::sync::Arc;
 use tower_http::{compression::CompressionLayer, trace::TraceLayer};
+use tracing::log;
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 struct AppState {
@@ -41,13 +42,18 @@ async fn main() {
     let args = Args::parse();
 
     // get the data_dir from the command line
-    let data_dir = args.data_dir;
+    let data_dir = fsPath::new(&args.data_dir).to_str().unwrap().to_string();
+    println!("data_dir: {data_dir}");
 
     // check if the folder exists
-    let exists: bool = fs::try_exists(&data_dir).expect("Can't check existence of data_dir");
+    let exists = fs::metadata(&data_dir).is_ok();
 
     if exists {
-        tracing::error!("data_dir does not exist: {data_dir}");
+        tracing::debug!("data_dir exists: {data_dir}");
+    } else {
+        tracing::warn!("data_dir does not exist: {data_dir}");
+        log::warn!("data_dir does not exist: {data_dir}");
+        println!("data_dir does not exist: {data_dir}");
         std::process::exit(1);
     }
 
@@ -55,10 +61,12 @@ async fn main() {
     let files = get_json_files(data_dir.clone()).expect("Can't get json files");
 
     if files.is_empty() {
-        tracing::debug!("data_dir contains json files: {files:?}");
-    } else {
         tracing::warn!("data_dir does not contain any json files");
+        log::warn!("data_dir does not contain any json files");
+        println!("data_dir does not contain any json files");
         std::process::exit(1);
+    } else {
+        tracing::debug!("data_dir contains json files: {files:?}");
     }
 
     // When the data_dir ends with a /, remove it

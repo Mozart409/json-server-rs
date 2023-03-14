@@ -1,5 +1,6 @@
 #![feature(fs_try_exists)]
 #![forbid(unsafe_code)]
+#![warn(clippy::pedantic)]
 
 use axum::extract::State;
 use axum::http::Error;
@@ -129,12 +130,12 @@ async fn handler_404() -> impl IntoResponse {
 
 async fn get_apis(State(state): State<Arc<AppState>>) -> impl IntoResponse {
     if state.files.is_empty() {
-        return (
+        (
             StatusCode::NOT_FOUND,
             axum::Json(json!({"error": "not found"})),
-        );
+        )
     } else {
-        return (StatusCode::OK, axum::Json(json!(state.files)));
+        (StatusCode::OK, axum::Json(json!(state.files)))
     }
 }
 

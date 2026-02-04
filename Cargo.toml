@@ -25,3 +25,19 @@ color-eyre = "0.6.3"
 [dev-dependencies]
 tempfile = "3.14.0"
 axum-test = "17.0.1"
+
+[package.metadata.deb]
+maintainer = "json-server-rs maintainers <maintainers@example.com>"
+depends = "$auto"
+assets = [
+    ["target/release/json-server-rs", "/usr/bin/json-server-rs", "755"],
+    ["README.md", "/usr/share/doc/json-server-rs/README.md", "644"],
+    ["LICENSE", "/usr/share/doc/json-server-rs/LICENSE", "644"],
+]
+
+[package.metadata.generate-rpm]
+assets = [
+    { source = "target/release/json-server-rs", dest = "/usr/bin/json-server-rs", mode = "755" },
+    { source = "README.md", dest = "/usr/share/doc/json-server-rs/README.md", mode = "644" },
+    { source = "LICENSE", dest = "/usr/share/doc/json-server-rs/LICENSE", mode = "644" },
+]

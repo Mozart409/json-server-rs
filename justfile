@@ -22,6 +22,14 @@ release: (clear)
 run: (clear)
     ./target/release/{{NAME}}
 
+# Build Debian package
+deb: (clear)
+    cargo deb
+
+# Build RPM package
+rpm: (clear)
+    cargo generate-rpm
+
 # Start: clear, build release, and run
 start: (clear) (release) (run)
 

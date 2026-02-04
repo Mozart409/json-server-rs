@@ -1,12 +1,12 @@
 [package]
 categories = ["command-line-utilities", "ci", "development-tools"]
 description = "A simple JSON server written in Rust"
-edition = "2021"
+edition = "2024"
 keywords = ["json", "server", "rust"]
 license = "MIT"
 name = "json-server-rs"
 repository = "github.com/mozart409/json-server-rs"
-version = "0.1.0"
+version = "0.1.1"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]

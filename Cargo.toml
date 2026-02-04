@@ -1,23 +1,43 @@
 [package]
 categories = ["command-line-utilities", "ci", "development-tools"]
 description = "A simple JSON server written in Rust"
-edition = "2021"
+edition = "2024"
 keywords = ["json", "server", "rust"]
 license = "MIT"
 name = "json-server-rs"
 repository = "github.com/mozart409/json-server-rs"
-version = "0.1.0"
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+version = "0.1.1"
 
 [dependencies]
-axum = "0.6.11"
-axum-macros = "0.3.6"
-clap = {version = "4.1.8", features = ["derive"]}
-fs-err = "2.9.0"
-serde = {version = "1.0", features = ["derive"]}
-serde_json = "1.0.68"
-tokio = {version = "1.26.0", features = ["full"]}
-tower = {version = "0.4", features = ["full"]}
-tower-http = {version = "0.4.0", features = ["full"]}
-tracing = "0.1"
-tracing-subscriber = {version = "0.3", features = ["env-filter"]}
+axum = "0.8.8"
+axum-macros = "0.5.0"
+clap = { version = "4.5.23", features = ["derive"] }
+fs-err = "3.0.0"
+serde = { version = "1.0.217", features = ["derive"] }
+serde_json = "1.0.135"
+tokio = { version = "1.41.1", features = ["full"] }
+tower = { version = "0.5.1", features = ["full"] }
+tower-http = { version = "0.6.2", features = ["full"] }
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+color-eyre = "0.6.3"
+
+[dev-dependencies]
+tempfile = "3.14.0"
+axum-test = "17.0.1"
+
+[package.metadata.deb]
+maintainer = "json-server-rs maintainers <maintainers@example.com>"
+depends = "$auto"
+assets = [
+    ["target/release/json-server-rs", "/usr/bin/json-server-rs", "755"],
+    ["README.md", "/usr/share/doc/json-server-rs/README.md", "644"],
+    ["LICENSE", "/usr/share/doc/json-server-rs/LICENSE", "644"],
+]
+
+[package.metadata.generate-rpm]
+assets = [
+    { source = "target/release/json-server-rs", dest = "/usr/bin/json-server-rs", mode = "755" },
+    { source = "README.md", dest = "/usr/share/doc/json-server-rs/README.md", mode = "644" },
+    { source = "LICENSE", dest = "/usr/share/doc/json-server-rs/LICENSE", mode = "644" },
+]

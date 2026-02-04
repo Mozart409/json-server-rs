@@ -6,14 +6,6 @@ NAME := "json-server-rs"
 clear:
     clear
 
-# Development: format and watch for changes
-dev: (fmt) (clear)
-    cargo watch -x run
-
-# Start Docker services
-up: (clear)
-    docker compose up -d --remove-orphans
-
 # Format code using cargo fmt
 fmt: (clear)
     cargo fmt

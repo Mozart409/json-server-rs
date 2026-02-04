@@ -32,6 +32,7 @@
             lefthook
             just
             cargo-watch
+            cargo-audit
             # Additional useful tools
             clang
             pkg-config
@@ -40,7 +41,7 @@
           shellHook = ''
             echo "json-server-rs dev shell"
             echo "Rust: $(rustc --version)"
-            echo "Available tools: bacon, lefthook, just, cargo-watch"
+            echo "Available tools: bacon, lefthook, just, cargo-watch, cargo-audit"
           '';
         };
       }
